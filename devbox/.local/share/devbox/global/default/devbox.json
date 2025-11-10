@@ -10,16 +10,13 @@
     "nodejs@latest",
     "go@latest",
     "gnumake@latest",
-    "ripgrep@latest"
+    "ripgrep@latest",
+    "gh@latest",
+    "tmux@latest"
   ],
   "shell": {
     "init_hook": [
       "echo 'Welcome to devbox!' > /dev/null"
-    ],
-    "scripts": {
-      "test": [
-        "echo \"Error: no test specified\" && exit 1"
-      ]
-    }
+    ]
   }
 }

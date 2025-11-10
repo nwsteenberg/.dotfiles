@@ -13,6 +13,7 @@ vim.opt.clipboard = 'unnamedplus'
 
 -- Display settings
 vim.opt.termguicolors = true
+vim.opt.signcolumn = "yes:2"
 
 -- Scrolling and UI settings
 vim.opt.cursorline = true
@@ -98,7 +99,14 @@ vim.opt.rtp:prepend(lazypath)
 -- Plugin configurations
 require("lazy").setup(plugins)
 require("lualine").setup()      -- status line
-require("nvim-tree").setup()    -- tree file browser
+require("nvim-tree").setup({    -- tree file browser
+  actions = {
+    open_file = {
+      quit_on_open = true,
+    },
+  },
+})
+
 require("telescope").setup()    -- navigate files
 require('gitsigns').setup {
 
