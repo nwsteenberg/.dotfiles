@@ -48,22 +48,23 @@ vim.lsp.inlay_hint.enable(true)
 vim.opt.fixeol = false
 
 local plugins = {
-  { "nvim-lua/plenary.nvim" },         -- used by other plugins
-  { "nvim-tree/nvim-web-devicons" },   -- used by other plugins
-  { "Shatur/neovim-session-manager" }, -- used by other plugins
+  { "nvim-lua/plenary.nvim" },                                -- used by other plugins
+  { "nvim-tree/nvim-web-devicons" },                          -- used by other plugins
+  { "Shatur/neovim-session-manager" },                        -- used by other plugins
+  { "MunifTanjim/nui.nvim" },                                 -- used by other plugins
 
-  { "nvim-lualine/lualine.nvim" },     -- status line
-  { "nvim-tree/nvim-tree.lua" },       -- file browser
-  { "nvim-telescope/telescope.nvim" }, -- telescope
+  { "nvim-lualine/lualine.nvim" },                            -- status line
+  { "nvim-neo-tree/neo-tree.nvim" },                          -- file browser
+  { "nvim-telescope/telescope.nvim" },                        -- telescope
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" }, -- treesitter
-  { 'mason-org/mason.nvim' },          -- installs LSP servers
-  { 'neovim/nvim-lspconfig' },         -- configures LSPs
-  { 'mason-org/mason-lspconfig.nvim' },-- links the two above
-  { "rebelot/kanagawa.nvim" },    -- colorscheme
-  { "folke/which-key.nvim" }, -- Keymaps 
-  { "lewis6991/gitsigns.nvim" }, -- Gitsigns
-  { "coffebar/neovim-project" }, -- Manage projects
-  { "github/copilot.vim" }, -- Manage projects
+  { 'mason-org/mason.nvim' },                                 -- installs LSP servers
+  { 'neovim/nvim-lspconfig' },                                -- configures LSPs
+  { 'mason-org/mason-lspconfig.nvim' },                       -- links the two above
+  { "rebelot/kanagawa.nvim" },                                -- colorscheme
+  { "folke/which-key.nvim" },                                 -- Keymaps
+  { "lewis6991/gitsigns.nvim" },                              -- Gitsigns
+  { "coffebar/neovim-project" },                              -- Manage projects
+  { "github/copilot.vim" },                                   -- Manage projects
 
   -- Autocomplete engine (LSP, snippets etc)
   {
@@ -98,16 +99,24 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Plugin configurations
 require("lazy").setup(plugins)
-require("lualine").setup()      -- status line
-require("nvim-tree").setup({    -- tree file browser
-  actions = {
-    open_file = {
-      quit_on_open = true,
-    },
+require("lualine").setup()       -- status line
+require("neo-tree").setup({      -- tree file browser
+  -- add options here
+  use_libuv_file_watcher = true, -- This will use the OS level file watchers to detect changes instead of relying on nvim autocmd events.
+  window = {
+    position = "float",
   },
+  filesystem = {
+    filtered_items = {
+      visible = false, -- when true, they will just be displayed differently than normal items
+      hide_dotfiles = false,
+      hide_gitignored = false,
+      hide_hidden = false, -- only works on Windows for hidden files/directories
+    }
+  }
 })
 
-require("telescope").setup()    -- navigate files
+require("telescope").setup() -- navigate files
 require('gitsigns').setup {
 
 }
@@ -133,16 +142,21 @@ require("mason-lspconfig").setup({
     "bashls"
   },
   config = function()
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
-      local lspconfig = require('lspconfig')
+    local capabilities = require('blink.cmp').get_lsp_capabilities()
+    local lspconfig = require('lspconfig')
 
-      lspconfig['gopls_ls'].setup({ capabilities = capabilities })
-      lspconfig['lua_ls'].setup({ capabilities = capabilities })
-      lspconfig['yamlls'].setup({ capabilities = capabilities })
-      lspconfig['jsonls'].setup({ capabilities = capabilities })
-      lspconfig['bashls'].setup({ capabilities = capabilities })
-    end
-  })
+    lspconfig['gopls_ls'].setup({ capabilities = capabilities })
+    lspconfig['lua_ls'].setup {
+      capabilities = capabilities,
+      settings = {
+        Lua = { diagnostics = { globals = { 'vim' } } }
+      }
+    }
+    lspconfig['yamlls'].setup({ capabilities = capabilities })
+    lspconfig['jsonls'].setup({ capabilities = capabilities })
+    lspconfig['bashls'].setup({ capabilities = capabilities })
+  end
+})
 require("neovim-project").setup({
   projects = { -- define project roots
     "/mnt/c/Users/nws/Synergy/*",
@@ -151,11 +165,11 @@ require("neovim-project").setup({
     "~/devel/.dotfiles",
   },
   picker = {
-    type = "telescope", -- one of "telescope", "fzf-lua", or "snacks"
+    type = "telescope",    -- one of "telescope", "fzf-lua", or "snacks"
     preview = {
-      enabled = true, -- show directory structure in Telescope preview
-      git_status = false, -- show branch name, an ahead/behind counter, and the git status of each file/folder
-      git_fetch = false, -- fetch from remote, used to display the number of commits ahead/behind, requires git authorization
+      enabled = true,      -- show directory structure in Telescope preview
+      git_status = false,  -- show branch name, an ahead/behind counter, and the git status of each file/folder
+      git_fetch = false,   -- fetch from remote, used to display the number of commits ahead/behind, requires git authorization
       show_hidden = false, -- show hidden files/folders
     },
   }
@@ -166,28 +180,49 @@ local wk = require("which-key")
 wk.add({
   -- Views
   ---- Splits
-  { "<leader>sl", "<cmd>vsplit<cr>", desc = "Split Vertical" },
-  { "<leader>sj", "<cmd>split<cr>", desc = "Split Horizontal" },
+  { "<leader>sl", "<cmd>vsplit<cr>",                        desc = "Split Vertical" },
+  { "<leader>sj", "<cmd>split<cr>",                         desc = "Split Horizontal" },
   ---- Window navigation
-  { "<leader>w", proxy = "<c-w>", group = "windows" }, -- proxy to window mappings
+  { "<leader>w",  proxy = "<c-w>",                          group = "windows" }, -- proxy to window mappings
   -- FileSystem
   ---- Explorer
-  { "<leader>e", "<cmd>:NvimTreeToggle<cr>", desc = "Open File Explorer", mode = "n" },
+  { "<leader>e",  "<cmd>:Neotree focus position=float<cr>", desc = "Open File Explorer",   mode = "n" },
   ---- Navigate files
-  { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files", mode = "n" },
-  { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Grep for files", mode = "n" },
-  { "<leader>b", "<cmd>:Telescope buffers<cr>", desc = "Buffers", mode = "n" },
+  { "<leader>ff", "<cmd>Telescope find_files<cr>",          desc = "Find Files",           mode = "n" },
+  { "<leader>fg", "<cmd>Telescope live_grep<cr>",           desc = "Grep for files",       mode = "n" },
+  { "<leader>b",  "<cmd>:Telescope buffers<cr>",            desc = "Buffers",              mode = "n" },
   ---- Open Project
-  { "<leader>o", "<cmd>:NeovimProjectDiscover<cr>", desc = "Open Project", mode = "n" },
+  { "<leader>o",  "<cmd>:NeovimProjectDiscover<cr>",        desc = "Open Project",         mode = "n" },
   -- Editor
   ---- Git
-  { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>", desc = "Git reset visual hunk" },
+  { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>",           desc = "Git reset visual hunk" },
   ---- Tab to indent
-  { "<TAB>", ">>", mode = "n" },
-  { "<S-TAB>", "<<", mode = "n" },
-  { "<TAB>", ">gv", mode = "v" },
-  { "<S-TAB>", "<gv", mode = "v" },
+  { "<TAB>",      ">>",                                     mode = "n" },
+  { "<S-TAB>",    "<<",                                     mode = "n" },
+  { "<TAB>",      ">gv",                                    mode = "v" },
+  { "<S-TAB>",    "<gv",                                    mode = "v" },
 })
+-- LSP Keymaps
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    local opts = { buffer = ev.buf }
+    -- Hover
+    vim.keymap.set({ 'n', 'v' }, 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set({ 'n', 'v' }, 'L', vim.diagnostic.open_float, opts)
+    -- Code action
+    vim.keymap.set({ 'n', 'v' }, '<leader>wc', vim.lsp.buf.code_action, opts)
+    -- Rename
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    -- Format document
+    vim.keymap.set('n', 'F', vim.lsp.buf.format, opts)
+    -- Goto
+    vim.keymap.set('n', '<leader>D', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', '<leader>d', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', '<leader>re', vim.lsp.buf.references, opts)
+  end
+})
+
 -- Copilot
 vim.keymap.set('i', '<C-J>', 'copilot#Accept("\\<CR>")', {
   expr = true,

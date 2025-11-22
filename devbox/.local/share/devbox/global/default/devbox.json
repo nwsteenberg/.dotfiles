@@ -13,10 +13,5 @@
     "ripgrep@latest",
     "gh@latest",
     "tmux@latest"
-  ],
-  "shell": {
-    "init_hook": [
-      "echo 'Welcome to devbox!' > /dev/null"
-    ]
-  }
+  ]
 }
