@@ -12,6 +12,7 @@
     "gnumake@latest",
     "ripgrep@latest",
     "gh@latest",
-    "tmux@latest"
+    "tmux@latest",
+    "fzf@latest"
   ]
 }

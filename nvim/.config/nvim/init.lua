@@ -56,7 +56,7 @@ local plugins = {
   { "nvim-lualine/lualine.nvim" },                            -- status line
   { "nvim-neo-tree/neo-tree.nvim" },                          -- file browser
   { "nvim-telescope/telescope.nvim" },                        -- telescope
-  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" }, -- treesitter
+  { "nvim-treesitter/nvim-treesitter",    build = ":TSUpdate" }, -- treesitter
   { 'mason-org/mason.nvim' },                                 -- installs LSP servers
   { 'neovim/nvim-lspconfig' },                                -- configures LSPs
   { 'mason-org/mason-lspconfig.nvim' },                       -- links the two above
@@ -64,7 +64,8 @@ local plugins = {
   { "folke/which-key.nvim" },                                 -- Keymaps
   { "lewis6991/gitsigns.nvim" },                              -- Gitsigns
   { "coffebar/neovim-project" },                              -- Manage projects
-  { "github/copilot.vim" },                                   -- Manage projects
+  { "github/copilot.vim" },                                   -- Copilot
+  { "lukas-reineke/indent-blankline.nvim" },                  -- indent guides
 
   -- Autocomplete engine (LSP, snippets etc)
   {
@@ -132,6 +133,7 @@ require("nvim-treesitter.configs").setup({
   auto_install = true,
   highlight = { enable = true, },
 })
+require("ibl").setup()
 require("mason").setup()
 require("mason-lspconfig").setup({
   ensure_installed = {
@@ -186,13 +188,13 @@ wk.add({
   { "<leader>w",  proxy = "<c-w>",                          group = "windows" }, -- proxy to window mappings
   -- FileSystem
   ---- Explorer
-  { "<leader>e",  "<cmd>:Neotree focus position=float<cr>", desc = "Open File Explorer",   mode = "n" },
+  { "<leader>e",  "<cmd>:Neotree focus position=float<cr>", desc = "Open File Explorer",       mode = "n" },
   ---- Navigate files
-  { "<leader>ff", "<cmd>Telescope find_files<cr>",          desc = "Find Files",           mode = "n" },
-  { "<leader>fg", "<cmd>Telescope live_grep<cr>",           desc = "Grep for files",       mode = "n" },
-  { "<leader>b",  "<cmd>:Telescope buffers<cr>",            desc = "Buffers",              mode = "n" },
+  { "<leader>ff", "<cmd>Telescope find_files<cr>",          desc = "Find Files",               mode = "n" },
+  { "<leader>fg", "<cmd>Telescope live_grep<cr>",           desc = "Grep for files",           mode = "n" },
+  { "<leader>b",  "<cmd>:Telescope buffers<cr>",            desc = "Buffers",                  mode = "n" },
   ---- Open Project
-  { "<leader>o",  "<cmd>:NeovimProjectDiscover<cr>",        desc = "Open Project",         mode = "n" },
+  { "<leader>o",  "<cmd>:NeovimProjectDiscover<cr>",        desc = "Open Project",             mode = "n" },
   -- Editor
   ---- Git
   { "<leader>gr", "<cmd>Gitsigns reset_hunk<cr>",           desc = "Git reset visual hunk" },
@@ -201,6 +203,8 @@ wk.add({
   { "<S-TAB>",    "<<",                                     mode = "n" },
   { "<TAB>",      ">gv",                                    mode = "v" },
   { "<S-TAB>",    "<gv",                                    mode = "v" },
+  ---- Remove search on esc
+  { "<Esc>",      "<cmd>noh<CR>",                           desc = "general clear highlights", mode = "v" },
 })
 -- LSP Keymaps
 vim.api.nvim_create_autocmd('LspAttach', {
