@@ -13,6 +13,11 @@
     "ripgrep@latest",
     "gh@latest",
     "tmux@latest",
-    "fzf@latest"
+    "fzf@latest",
+    "k3d@latest",
+    "kubectl@latest",
+    "python3@latest",
+    "helmfile@latest",
+    "kubernetes-helm@latest"
   ]
 }

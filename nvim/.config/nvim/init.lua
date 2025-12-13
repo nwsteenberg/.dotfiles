@@ -48,24 +48,24 @@ vim.lsp.inlay_hint.enable(true)
 vim.opt.fixeol = false
 
 local plugins = {
-  { "nvim-lua/plenary.nvim" },                                -- used by other plugins
-  { "nvim-tree/nvim-web-devicons" },                          -- used by other plugins
-  { "Shatur/neovim-session-manager" },                        -- used by other plugins
-  { "MunifTanjim/nui.nvim" },                                 -- used by other plugins
+  { "nvim-lua/plenary.nvim" },                                   -- used by other plugins
+  { "nvim-tree/nvim-web-devicons" },                             -- used by other plugins
+  { "Shatur/neovim-session-manager" },                           -- used by other plugins
+  { "MunifTanjim/nui.nvim" },                                    -- used by other plugins
 
-  { "nvim-lualine/lualine.nvim" },                            -- status line
-  { "nvim-neo-tree/neo-tree.nvim" },                          -- file browser
-  { "nvim-telescope/telescope.nvim" },                        -- telescope
+  { "nvim-lualine/lualine.nvim" },                               -- status line
+  { "nvim-neo-tree/neo-tree.nvim" },                             -- file browser
+  { "nvim-telescope/telescope.nvim" },                           -- telescope
   { "nvim-treesitter/nvim-treesitter",    build = ":TSUpdate" }, -- treesitter
-  { 'mason-org/mason.nvim' },                                 -- installs LSP servers
-  { 'neovim/nvim-lspconfig' },                                -- configures LSPs
-  { 'mason-org/mason-lspconfig.nvim' },                       -- links the two above
-  { "rebelot/kanagawa.nvim" },                                -- colorscheme
-  { "folke/which-key.nvim" },                                 -- Keymaps
-  { "lewis6991/gitsigns.nvim" },                              -- Gitsigns
-  { "coffebar/neovim-project" },                              -- Manage projects
-  { "github/copilot.vim" },                                   -- Copilot
-  { "lukas-reineke/indent-blankline.nvim" },                  -- indent guides
+  { 'mason-org/mason.nvim' },                                    -- installs LSP servers
+  { 'neovim/nvim-lspconfig' },                                   -- configures LSPs
+  { 'mason-org/mason-lspconfig.nvim' },                          -- links the two above
+  { "rebelot/kanagawa.nvim" },                                   -- colorscheme
+  { "folke/which-key.nvim" },                                    -- Keymaps
+  { "lewis6991/gitsigns.nvim" },                                 -- Gitsigns
+  { "coffebar/neovim-project" },                                 -- Manage projects
+  { "github/copilot.vim" },                                      -- Copilot
+  { "lukas-reineke/indent-blankline.nvim" },                     -- indent guides
 
   -- Autocomplete engine (LSP, snippets etc)
   {
@@ -203,8 +203,6 @@ wk.add({
   { "<S-TAB>",    "<<",                                     mode = "n" },
   { "<TAB>",      ">gv",                                    mode = "v" },
   { "<S-TAB>",    "<gv",                                    mode = "v" },
-  ---- Remove search on esc
-  { "<Esc>",      "<cmd>noh<CR>",                           desc = "general clear highlights", mode = "v" },
 })
 -- LSP Keymaps
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -219,7 +217,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- Rename
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     -- Format document
-    vim.keymap.set('n', 'F', vim.lsp.buf.format, opts)
+    vim.keymap.set('n', '<leader>F', vim.lsp.buf.format, opts)
     -- Goto
     vim.keymap.set('n', '<leader>D', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', '<leader>d', vim.lsp.buf.definition, opts)
